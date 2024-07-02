@@ -1,3 +1,8 @@
+header-includes:
+- \usepackage{ams}
+- \usepackage{amsmath}
+- \usepackage{amsfonts}
+
 # three-body-integral-equations
 
 # Goal 
