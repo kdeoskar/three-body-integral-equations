@@ -54,7 +54,7 @@ def J(x):
         return np.exp(-1/x * np.exp(-1/(1-x)))
 
 def H(p, k):
-    return J(E_2(E, p)**2 / (4 * m**2)) * J(E_2(E, p)**2 / (4 * m**2))
+    return J(E_2(E, p)**2 / (4 * m**2)) * J(E_2(E, k)**2 / (4 * m**2))
 
 def G_S(p, k, epsilon):
     return -H(p,k) / (4 * p * k) * cmath.log( (alpha(E, p,k) - 2*p*k + 1j*epsilon) /  (alpha(E, p,k) + 2*p*k + 1j*epsilon)  ) #1j is the imaginary unit in python syntax
@@ -64,7 +64,7 @@ def M_2(E, k, epsilon):
     return -16*np.pi*(m*a)(E_2(E, k) / m) / (1 + 1j*cmath.sqrt((E_2(E, k)/m)**2 - 1))
 
 # Finds the B matrix and returns its inverse
-def B_inv(E, N, epsilon):
+def B(E, N, epsilon):
     B = []
     momenta_array = momenta(E, N)
     for i in range(N):
@@ -72,11 +72,16 @@ def B_inv(E, N, epsilon):
             k_i = momenta_array[i]
             k_j = momenta_array[j]
             B[i, j] = np.kron(i, j) + (delta_k(E, N) * k_j**2) / ((2 * np.pi)**2 * omega(k_j)) * G_S(k_i, k_j, epsilon) * M_2(E, k_j, epsilon)
-    # Find inverse
+
+    return B
+
+# Find inverse
+def B_inv(E, N, epsilon):
     B_inv = np.linalg.inv(B)
     return B_inv
 
 
 '''
-Function to solve for d_S
+Function to solve for d_S()
 '''
+def d_S();
