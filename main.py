@@ -5,7 +5,7 @@ import cmath
 ## Fixed Parameters
 m = 1
 a = 5
-E = 1 # Just adding this for now; it'll be varied
+# E = 1 # Just adding this for now; it'll be varied
 N = 1000 # Number of discretized momenta
 
 # Momenta ranges from k_min = 0 to k_max which depends on 3-body CM Frame Energy (E)
@@ -56,7 +56,7 @@ def J(x):
 def H(p, k):
     return J(E_2(E, p)**2 / (4 * m**2)) * J(E_2(E, k)**2 / (4 * m**2))
 
-def G_S(p, k, epsilon):
+def G_S(E, p, k, epsilon):
     return -H(p,k) / (4 * p * k) * cmath.log( (alpha(E, p,k) - 2*p*k + 1j*epsilon) /  (alpha(E, p,k) + 2*p*k + 1j*epsilon)  ) #1j is the imaginary unit in python syntax
 
 # Bound-state internal scattering amplitude
@@ -84,4 +84,12 @@ def B_inv(E, N, epsilon):
 '''
 Function to solve for d_S()
 '''
-def d_S();
+def d_S(E, p, k, epsilon, N):
+    '''Solves for d_S using Brute Force Method'''
+    B_inv = B_inv(E, N, epsilon)
+
+    # Find the Indices of p and k in the momentum array
+    n_p = p / delta_k(E, N) 
+    n_k = k / delta_k(E, N)
+
+    return B_inv[n_p][n_k] * G_S(E, p, k, epsilon)
