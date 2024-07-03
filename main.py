@@ -61,7 +61,7 @@ def G_S(E, p, k, epsilon):
 
 # Bound-state internal scattering amplitude
 def M_2(E, k, epsilon):
-    return -16*np.pi*(m*a)(E_2(E, k) / m) / (1 + 1j*cmath.sqrt((E_2(E, k)/m)**2 - 1))
+    return -16*np.pi*(m*a)((E_2(E, k) + 1j*epsilon) / m) / (1 + 1j*cmath.sqrt(((E_2(E, k) + 1j*epsilon)/m)**2 - 1))
 
 # Finds the B matrix and returns its inverse
 def B(E, N, epsilon):
@@ -93,3 +93,4 @@ def d_S(E, p, k, epsilon, N):
     n_k = k / delta_k(E, N)
 
     return B_inv[n_p][n_k] * G_S(E, p, k, epsilon)
+
