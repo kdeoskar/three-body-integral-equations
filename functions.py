@@ -67,7 +67,7 @@ def G_S(E, m, p, k, epsilon) -> complex:
 
 # Bound-state internal scattering amplitude
 def M_2(E, m, a, k, epsilon) -> complex:
-    return -16*np.pi*(m*a)*(cmath.sqrt(s2k(E, m, k) + 1j*epsilon) / m) / (1 + 1j*cmath.sqrt(((s2k(E, m, k) + 1j*epsilon)/2m)**2 - 1))
+    return -16*np.pi*cmath.sqrt(s2k(E, m, k) + 1j*epsilon) / (1 / a + 1j*cmath.sqrt(((s2k(E, m, k) + 1j*epsilon)/2)**2 - m**2))
 
 # Calculates the B matrix and returns its inverse
 def B(E, m, a, N, epsilon):
