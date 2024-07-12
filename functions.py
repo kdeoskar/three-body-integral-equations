@@ -48,7 +48,7 @@ def E_2(E, m, k):
     return (E - omega(m, k))**2 -k**2
 
 def s2k(E, m, k):
-    return E_2**2
+    return E_2(E, m, k)**2
 
 # Defining cut-off function(s)
 def J(x):
