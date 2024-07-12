@@ -16,27 +16,28 @@ Helper functions related to Momentum:
 '''
 
 # Function to calculate k_max corresponding to energy E
-def k_max(E:int, m:int) -> float:
+def k_max(E:int, m:int) -> int:
     return ((E**2-m**2)/ (2*E))**2
 
 def k_min():
     return 0
 
 # Function to calculate 
-def delta_k(E:int, m:int, N:int) -> float:
+def delta_k(E:int, m:int, N:int) -> int:
     return (k_max(E, m) - k_min()) / N
 
 # Generates list of momenta for energy E and N number of discrete points
 # Exclude k_min because it is zero
-def momenta(E:int, m:int, N:int):
+def momenta(E:int, m:int, N:int) -> int:
     momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
     return momenta_array
+
 
 '''
 Helper functions related to Energy:
 '''
 #Time component of 4-vector k
-def omega(m:int, k:int) -> float:
+def omega(m:int, k:int) -> int:
     return np.sqrt(m**2 + k**2)
 
 def alpha(E, m, p, k):
@@ -47,7 +48,7 @@ def E_2(E, m, k):
     return (E - omega(m, k))**2 -k**2
 
 def s2k(E, m, k):
-    return E_2(E, m, k)**2
+    return E_2**2
 
 # Defining cut-off function(s)
 def J(x):
@@ -81,21 +82,21 @@ def B(E, m, a, N, epsilon):
     return B
 
 # Find inverse
-def B_inv(E, m, a, N, epsilon):
-    B_inv = np.linalg.inv(B(E, m, a, N, epsilon))
+def B_inv(E, m, N, epsilon):
+    B_inv = np.linalg.inv(B(E, m, N, epsilon))
     return B_inv
 
 
 '''
 Function to solve for d_S() (eq 34)
 '''
-def d_S(E, m, a, p, k, epsilon, N):
+def d_S(E, m, p, k, epsilon, N):
     '''Solves for d_S using Brute Force Method'''
-    B_inverse = B_inv(E, m, a, N, epsilon)
+    B_inverse = B_inv(E, m, N, epsilon)
 
     # Find the Indices of p and k in the momentum array
-    n_p = int(p / delta_k(E, m, N))
-    n_k = int(k / delta_k(E, m, N))
+    n_p = p / delta_k(E, m, N) 
+    n_k = k / delta_k(E, m, N)
 
     return B_inverse[n_p][n_k] * G_S(E, m, p, k, epsilon)
 
@@ -128,7 +129,7 @@ def triangle_function(x, y, z):
 "on shell" value of k as q (momentum corresponding bound state pole) (eq 19)
 '''
 def q(E, m, a) -> complex:
-    return (1 / (2*E)) * cmath.sqrt(triangle_function(E**2, s_b(m, a), m**2))
+    return (1 / 2*E) * cmath.sqrt(triangle_function(E**2, s_b(m, a), m**2))
 
 '''
 Two body phase space between bound state and spectator (eq 26)
