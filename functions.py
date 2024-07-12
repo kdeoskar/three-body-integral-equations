@@ -85,7 +85,7 @@ def B_inv(E, m, N, epsilon):
 
 
 '''
-Function to solve for d_S()
+Function to solve for d_S() (eq 34)
 '''
 def d_S(E, m, p, k, epsilon, N):
     '''Solves for d_S using Brute Force Method'''
@@ -101,23 +101,36 @@ def d_S(E, m, p, k, epsilon, N):
 # The above code gives us d_S(p,k; epsilon, N)
 # The next step is to calculate the residue 'g'
 ###############################################
-
+'''
+The pole position in terms of the binding momentum, s_b, (eq 17)
+'''
 def s_b(m, a):
     return 4*( m**2 - (1 / a)**2 )
 
-def residue_g(m, a):
+'''
+Residue g (eq 18)
+'''
+def residue_g(m, a): 
     return 8 * np.sqrt(2*np.pi * np.sqrt(s_b(m, a)) * (1/a))
 
 ###############################################
 # Finding the momentum corresponding to the bound state pole s_b, denoted by q
 ###############################################
-
+'''
+Kallen Triangle Function 
+'''
 def triangle_function(x, y, z):
     return x**2 + y**2 + z**2 - 2*( x*y + y*z + x*z )
 
+'''
+"on shell" value of k as q (momentum corresponding bound state pole) (eq 19)
+'''
 def q(E, m, a) -> complex:
     return (1 / 2*E) * cmath.sqrt(triangle_function(E**2, s_b(m, a), m**2))
 
+'''
+Two body phase space between bound state and spectator (eq 26)
+'''
 def rho_phib(E, m, a):
     return ( q(E, m, a) / (8*np.pi* E ))
 
@@ -125,6 +138,9 @@ def rho_phib(E, m, a):
 # Now, we just need to take appropriate limits
 ################################################
 
+'''
+Numerical evaluation of the limit to the bound state pole (eq 24)
+'''
 def M_phib(E, m, a, N, epsilon):
     # q = q(E, m, a)
     return residue_g(m, a)**2 * d_S(E, m, q(E, m, a), q(E, m, a), epsilon, N)
