@@ -32,7 +32,6 @@ def momenta(E:int, m:int, N:int) -> int:
     momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
     return momenta_array
 
-
 '''
 Helper functions related to Energy:
 '''
@@ -79,21 +78,21 @@ def B(E, m, a, N, epsilon):
     return B
 
 # Find inverse
-def B_inv(E, m, N, epsilon):
-    B_inv = np.linalg.inv(B(E, m, N, epsilon))
+def B_inv(E, m, a, N, epsilon):
+    B_inv = np.linalg.inv(B(E, m, a, N, epsilon))
     return B_inv
 
 
 '''
 Function to solve for d_S()
 '''
-def d_S(E, m, p, k, epsilon, N):
+def d_S(E, m, a, p, k, epsilon, N):
     '''Solves for d_S using Brute Force Method'''
-    B_inverse = B_inv(E, m, N, epsilon)
+    B_inverse = B_inv(E, m, a, N, epsilon)
 
     # Find the Indices of p and k in the momentum array
-    n_p = p / delta_k(E, m, N) 
-    n_k = k / delta_k(E, m, N)
+    n_p = int(p / delta_k(E, m, N))
+    n_k = int(k / delta_k(E, m, N))
 
     return B_inverse[n_p][n_k] * G_S(E, m, p, k, epsilon)
 
@@ -116,7 +115,7 @@ def triangle_function(x, y, z):
     return x**2 + y**2 + z**2 - 2*( x*y + y*z + x*z )
 
 def q(E, m, a) -> complex:
-    return (1 / 2*E) * cmath.sqrt(triangle_function(E**2, s_b(m, a), m**2))
+    return (1 / (2*E)) * cmath.sqrt(triangle_function(E**2, s_b(m, a), m**2))
 
 def rho_phib(E, m, a):
     return ( q(E, m, a) / (8*np.pi* E ))
