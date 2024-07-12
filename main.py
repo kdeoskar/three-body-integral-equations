@@ -16,10 +16,10 @@ def main():
     
     # print(M_phib(E, m, a, N, epsilon))
     # print(cmath.sqrt(triangle_function(E, s_b(m, a), m**2)))
-    q_momentum = q(E, m, a)
+    q_momentum = q(E, m, a).real
     # print(k_max(E, m))
     # print(bool(k_max(E, m) > q_momentum))
-    print(q_momentum)
+    # print(q_momentum)
 
     start_time = time.time()
 
