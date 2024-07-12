@@ -16,19 +16,19 @@ Helper functions related to Momentum:
 '''
 
 # Function to calculate k_max corresponding to energy E
-def k_max(E:int, m:int) -> int:
+def k_max(E:int, m:int) -> float:
     return ((E**2-m**2)/ (2*E))**2
 
 def k_min():
     return 0
 
 # Function to calculate 
-def delta_k(E:int, m:int, N:int) -> int:
+def delta_k(E:int, m:int, N:int) -> float:
     return (k_max(E, m) - k_min()) / N
 
 # Generates list of momenta for energy E and N number of discrete points
 # Exclude k_min because it is zero
-def momenta(E:int, m:int, N:int) -> int:
+def momenta(E:int, m:int, N:int):
     momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
     return momenta_array
 
@@ -36,7 +36,7 @@ def momenta(E:int, m:int, N:int) -> int:
 Helper functions related to Energy:
 '''
 #Time component of 4-vector k
-def omega(m:int, k:int) -> int:
+def omega(m:int, k:int) -> float:
     return np.sqrt(m**2 + k**2)
 
 def alpha(E, m, p, k):
