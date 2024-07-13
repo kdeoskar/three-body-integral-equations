@@ -147,7 +147,7 @@ def q(E, m, a) -> complex:
 '''
 Two body phase space between bound state and spectator (eq 26)
 '''
-def rho_phib(E, m, a):
+def rho_phib(E, m, a) -> complex:
     return ( q(E, m, a) / (8*np.pi* E ))
 
 
@@ -183,17 +183,17 @@ def M_phib_inv_bound_state_value(E, m, a, N, epsilon) -> complex:
 # and re, im parts of rho * M
 ################################################
 
-def Re_rho_M(E, m, a, N, epsilon) -> float:
+def Re_rho_M(E, m, a, N, epsilon):
     return rho_phib(E, m, a) *  (M_phib(E, m, a, N, epsilon)).real
 
 def Re_rho_M_matrix(E, m, a, N, epsilon):
-    return rho_phib(E, m, a) *  ( M_phib_bound_state_value(E, m, a, N, epsilon)).real
+    return (rho_phib(E, m, a) * M_phib_bound_state_value(E, m, a, N, epsilon)).real
 
 def Im_rho_M(E, m, a, N, epsilon):
-    return rho_phib(E, m, a) *  (M_phib(E, m, a, N, epsilon)).imag
+    return (rho_phib(E, m, a).real * M_phib(E, m, a, N, epsilon)).imag
 
-def Im_rho_M_matrix(E, m, a, N, epsilon) -> float:
-    return rho_phib(E, m, a) *  ( M_phib_bound_state_value(E, m, a, N, epsilon)).imag
+def Im_rho_M_matrix(E, m, a, N, epsilon):
+    return (rho_phib(E, m, a).real *  M_phib_bound_state_value(E, m, a, N, epsilon)).imag
 
 def delta_rho(E, m, a, N, epsilon):
     return np.abs( (Im_rho_M_matrix(E, m, a, N, epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a) ) * 100

@@ -1,3 +1,4 @@
+import numpy
 import matplotlib.pyplot as plt
 import time 
 import cmath
@@ -10,7 +11,7 @@ def main():
     a = 2
     epsilon = 0.01
     # E = 1 # Just adding this for now; it'll be varied
-    N = 20 # Number of discretized momenta
+    N = 95 # Number of discretized momenta
 
     # Momenta ranges from k_min = 0 to k_max which depends on 3-body CM Frame Energy (E)
     
