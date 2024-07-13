@@ -10,21 +10,17 @@ def main():
     a = 2
     epsilon = 0.01
     # E = 1 # Just adding this for now; it'll be varied
-    N = 1000 # Number of discretized momenta
+    N = 20 # Number of discretized momenta
 
     # Momenta ranges from k_min = 0 to k_max which depends on 3-body CM Frame Energy (E)
     
-    # print(M_phib(E, m, a, N, epsilon))
-    # print(cmath.sqrt(triangle_function(E, s_b(m, a), m**2)))
     q_momentum = q(E, m, a).real
-    # print(k_max(E, m))
-    # print(bool(k_max(E, m) > q_momentum))
-    # print(q_momentum)
 
     start_time = time.time()
 
-    # print(B(E, m, a, N, epsilon))
-    print(d_S(E, m, a, q_momentum, q_momentum, epsilon, N))
+    print(Re_rho_M_matrix(E, m, a, N, epsilon))
+    print(Im_rho_M_matrix(E, m, a, N, epsilon))
+    print(delta_rho(E, m, a, N, epsilon))
 
     print()
     print("Process finished --- %s seconds ---" % (time.time() - start_time))

@@ -1,5 +1,6 @@
 import numpy as np
 import cmath
+import math
 
 # ## Fixed Parameters
 # m = 1
@@ -16,19 +17,19 @@ Helper functions related to Momentum:
 '''
 
 # Function to calculate k_max corresponding to energy E
-def k_max(E:int, m:int) -> float:
+def k_max(E:float, m:float) -> float:
     return ((E**2-m**2)/ (2*E))**2
 
 def k_min():
     return 0
 
 # Function to calculate 
-def delta_k(E:int, m:int, N:int) -> float:
+def delta_k(E:float, m:float, N:int) -> float:
     return (k_max(E, m) - k_min()) / N
 
 # Generates list of momenta for energy E and N number of discrete points
 # Exclude k_min because it is zero
-def momenta(E:int, m:int, N:int):
+def momenta(E:float, m:float, N:int):
     momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
     return momenta_array
 
@@ -36,7 +37,7 @@ def momenta(E:int, m:int, N:int):
 Helper functions related to Energy:
 '''
 #Time component of 4-vector k
-def omega(m:int, k:int) -> float:
+def omega(m:float, k:float) -> float:
     return np.sqrt(m**2 + k**2)
 
 def alpha(E, m, p, k):
@@ -99,6 +100,18 @@ def d_S(E, m, a, p, k, epsilon, N):
 
     return B_inverse[n_p][n_k] * G_S(E, m, p, k, epsilon)
 
+def d_S_matrix(E, m, a, epsilon, N):
+    B_inverse = B_inv(E, m, a, N, epsilon)
+    d_matrix = np.zeros((N, N), dtype=complex)
+    momenta_array = momenta(E, m, N)
+    for p in momenta_array:
+        for k in momenta_array:
+            n_p = math.floor(p / delta_k(E, m, N)) - 1
+            n_k = math.floor(k / delta_k(E, m, N)) - 1
+            d_matrix[n_p][n_k] =  B_inverse[n_p][n_k] * G_S(E, m, p, k, epsilon)
+
+    return d_matrix
+
 ###############################################
 # The above code gives us d_S(p,k; epsilon, N)
 # The next step is to calculate the residue 'g'
@@ -114,6 +127,7 @@ Residue g (eq 18)
 '''
 def residue_g(m, a): 
     return 8 * np.sqrt(2*np.pi * np.sqrt(s_b(m, a)) * (1/a))
+
 
 ###############################################
 # Finding the momentum corresponding to the bound state pole s_b, denoted by q
@@ -136,6 +150,7 @@ Two body phase space between bound state and spectator (eq 26)
 def rho_phib(E, m, a):
     return ( q(E, m, a) / (8*np.pi* E ))
 
+
 ################################################
 # Now, we just need to take appropriate limits
 ################################################
@@ -143,12 +158,46 @@ def rho_phib(E, m, a):
 '''
 Numerical evaluation of the limit to the bound state pole (eq 24)
 '''
-def M_phib(E, m, a, N, epsilon):
-    # q = q(E, m, a)
-    return residue_g(m, a)**2 * d_S(E, m, q(E, m, a), q(E, m, a), epsilon, N)
+def M_phib(E, m, a, N, epsilon) -> complex:
+    q_momentum = q(E, m, a).real
+    return residue_g(m, a)**2 * d_S(E, m, a, q_momentum, q_momentum, epsilon, N)
 
-def Im_M(E, m, a, N, epsilon):
-    pass
+def M_phib_matrix(E, m, a, N, epsilon):
+    return residue_g(m, a)**2 * d_S_matrix(E, m, a, epsilon, N)
+
+def M_phib_bound_state_value(E, m, a, N, epsilon) -> complex:
+    q_momentum = q(E, m, a).real
+    q_index = int(q_momentum / delta_k(E, m, N) )
+    return M_phib_matrix(E, m, a, N, epsilon)[q_index][q_index]
+
+def M_phib_inv(E, m, a, N, epsilon):
+    return np.linalg.inv(M_phib_matrix(E, m, a, N, epsilon)) 
+
+def M_phib_inv_bound_state_value(E, m, a, N, epsilon) -> complex:
+    q_momentum = q(E, m, a).real
+    q_index = int(q_momentum / delta_k(E, m, N) )
+    return M_phib_inv(E, m, a, N, epsilon)[q_index][q_index]
+
+################################################
+# To calculate uncertainty Delta rho_{\varphi b}
+# and re, im parts of rho * M
+################################################
+
+def Re_rho_M(E, m, a, N, epsilon) -> float:
+    return rho_phib(E, m, a) *  (M_phib(E, m, a, N, epsilon)).real
+
+def Re_rho_M_matrix(E, m, a, N, epsilon):
+    return rho_phib(E, m, a) *  ( M_phib_bound_state_value(E, m, a, N, epsilon)).real
+
+def Im_rho_M(E, m, a, N, epsilon):
+    return rho_phib(E, m, a) *  (M_phib(E, m, a, N, epsilon)).imag
+
+def Im_rho_M_matrix(E, m, a, N, epsilon) -> float:
+    return rho_phib(E, m, a) *  ( M_phib_bound_state_value(E, m, a, N, epsilon)).imag
+
+def delta_rho(E, m, a, N, epsilon):
+    return np.abs( (Im_rho_M_matrix(E, m, a, N, epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a) ) * 100
+
 
 def main():
     pass
