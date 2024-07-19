@@ -11,7 +11,7 @@ def main():
     a = 2
     epsilon = 0.01
     # E = 1 # Just adding this for now; it'll be varied
-    N = 93 # Number of discretized momenta
+    N = 1000 # Number of discretized momenta
 
     # Momenta ranges from k_min = 0 to k_max which depends on 3-body CM Frame Energy (E)
     
@@ -27,15 +27,39 @@ def main():
     # print(Im_rho_M_matrix(E, m, a, N, epsilon))
     # print(delta_rho(E, m, a, N, epsilon))
 
-    quantities = return_values(E, m, a, N, epsilon)
-    print("Re(rho * M) = ", quantities[0])
-    print("Im(rho * M) = ", quantities[1])
-    print("Delta rho = ", quantities[2])
+    # quantities = return_values(E, m, a, N, epsilon)
+    # print("Re(rho * M) = ", quantities[0])
+    # print("Im(rho * M) = ", quantities[1])
+    # print("Delta rho = ", quantities[2])
 
-    print(np.linalg.det(M_phib_matrix(E,m,a,N,epsilon)))
+    '''Random test to see if np.linalg.inv works with complex matrices'''
+    # complex_matrix = np.array([
+    #     [1e-12+1e-12j, 2e-12+0e-23j],
+    #     [3e-12+1e-12j, 2e-12+4e-23j]
+    # ], dtype=complex)
+
+    # print(complex_matrix)
+    # print(np.linalg.det(complex_matrix))
+    # print(complex_matrix[0][0]*complex_matrix[1][1] - complex_matrix[0][1]*complex_matrix[1][0])
+
+    '''Let's see if reducing the scale of the entries makes determinant non-zero'''
+    M_matrix = M_phib_matrix(E,m,a,N,epsilon)
+    print(M_matrix)
+    print(np.linalg.det(M_matrix))
+
+    M_reduced = (1e-18)*M_matrix
+    print(M_reduced)
+    print(np.linalg.det(M_reduced))
+
+    M_reduced_inv = np.linalg.inv(M_reduced)
+    print(M_reduced_inv)
+
+    M_matrix_inv = M_phib_inv(E,m,a,N,epsilon)
+    print(M_matrix_inv)
 
     print()
     print("Process finished --- %s seconds ---" % (time.time() - start_time))
 
 if __name__ == '__main__':
     main()
+

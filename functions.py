@@ -47,6 +47,7 @@ def alpha(E, m, p, k):
 def E_2(E, m, k):
     return (E - omega(m, k))**2 -k**2
 
+# Mandelstam Variable corresponding to 3-momentum k and mass m
 def s2k(E, m, k):
     return E_2(E, m, k)**2
 
@@ -85,7 +86,6 @@ def B(E, m, a, N, epsilon):
 def B_inv(E, m, a, N, epsilon):
     B_inv = np.linalg.inv(B(E, m, a, N, epsilon))
     return B_inv
-
 
 '''
 Function to solve for d_S() (eq 34)
@@ -202,6 +202,7 @@ def delta_rho(E, m, a, N, epsilon):
     return np.abs( (Im_rho_M_matrix(E, m, a, N, epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a) ) * 100
 
 
+# Returns values for Re(rho_{\varphi b} M_{\varphi b}), Im(rho_{\varphi b} M_{\varphi b}), and Delta rho_{\varphi b}
 def return_values(E, m, a, N, epsilon):
     M_bound_state_value = M_phib_bound_state_value(E, m, a, N, epsilon)
     M_inv_bound_state_value =  M_phib_inv_bound_state_value(E, m, a, N, epsilon)
