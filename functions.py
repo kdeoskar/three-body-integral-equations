@@ -163,15 +163,18 @@ def M_phib(E, m, a, N, epsilon) -> complex:
     return residue_g(m, a)**2 * d_S(E, m, a, q_momentum, q_momentum, epsilon, N)
 
 def M_phib_matrix(E, m, a, N, epsilon):
-    return residue_g(m, a)**2 * d_S_matrix(E, m, a, epsilon, N)
+    return residue_g(m, a)**2 * d_S_matrix(E, m, a, epsilon, N) 
 
 def M_phib_bound_state_value(E, m, a, N, epsilon) -> complex:
     q_momentum = q(E, m, a).real
     q_index = int(q_momentum / delta_k(E, m, N) )
-    return M_phib_matrix(E, m, a, N, epsilon)[q_index][q_index]
+    val = M_phib_matrix(E, m, a, N, epsilon)[q_index][q_index]
+    # print("Value of M_phib at the bound state is : ", val)
+    # return M_phib_matrix(E, m, a, N, epsilon)[q_index][q_index]
+    return val
 
 def M_phib_inv(E, m, a, N, epsilon):
-    return np.linalg.inv(M_phib_matrix(E, m, a, N, epsilon)) 
+    return np.linalg.inv(M_phib_matrix(E, m, a, N, epsilon)) # THIS IS ERRORING OUT 
 
 def M_phib_inv_bound_state_value(E, m, a, N, epsilon) -> complex:
     q_momentum = q(E, m, a).real
@@ -193,10 +196,23 @@ def Im_rho_M(E, m, a, N, epsilon):
     return (rho_phib(E, m, a).real * M_phib(E, m, a, N, epsilon)).imag
 
 def Im_rho_M_matrix(E, m, a, N, epsilon):
-    return (rho_phib(E, m, a).real *  M_phib_bound_state_value(E, m, a, N, epsilon)).imag
+    return (rho_phib(E, m, a).real *  M_phib_inv_bound_state_value(E, m, a, N, epsilon)).imag
 
 def delta_rho(E, m, a, N, epsilon):
     return np.abs( (Im_rho_M_matrix(E, m, a, N, epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a) ) * 100
+
+
+def return_values(E, m, a, N, epsilon):
+    M_bound_state_value = M_phib_bound_state_value(E, m, a, N, epsilon)
+    M_inv_bound_state_value =  M_phib_inv_bound_state_value(E, m, a, N, epsilon)
+    rho_value = rho_phib(E, m, a)
+    list = []
+
+    list[0] = (rho_value * M_bound_state_value).real
+    list[1] = (rho_value * M_bound_state_value).imag
+    list[2] = np.abs( (M_inv_bound_state_value - rho_value) / rho_value) * 100
+
+    return list
 
 
 def main():
