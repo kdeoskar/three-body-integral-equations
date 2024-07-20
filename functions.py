@@ -62,9 +62,10 @@ def J(x):
 
 def H(E, m, p, k):
     return J(E_2(E, m, p)**2 / (4 * m**2)) * J(E_2(E, m, k)**2 / (4 * m**2))
-
+ 
+# Removing factors of p and k in denominator for now
 def G_S(E, m, p, k, epsilon) -> complex:
-    return -H(E, m, p, k) / (4 * p * k) * cmath.log( (alpha(E, m, p, k) - 2*p*k + 1j*epsilon) /  (alpha(E, m, p, k) + 2*p*k + 1j*epsilon)  ) #1j is the imaginary unit in python syntax
+    return -H(E, m, p, k) / (4 * p * k ) * cmath.log( (alpha(E, m, p, k) - 2*p*k + 1j*epsilon) /  (alpha(E, m, p, k) + 2*p*k + 1j*epsilon)  ) #1j is the imaginary unit in python syntax
 
 # Bound-state internal scattering amplitude
 def M_2(E, m, a, k, epsilon) -> complex:
@@ -78,7 +79,7 @@ def B(E, m, a, N, epsilon):
         for j in range(N):
             k_i = momenta_array[i]
             k_j = momenta_array[j]
-            B[i][j] = np.kron(i, j) + (delta_k(E, m, N) * k_j**2) / ((2 * np.pi)**2 * omega(m, k_j)) * G_S(E, m, k_i, k_j, epsilon) * M_2(E, m, a, k_j, epsilon)
+            B[i][j] = np.kron(i, j) + (delta_k(E, m, N) * k_j**2) / ((2 * np.pi)**2 * omega(m, k_j)) * G_S(E, m, k_i, k_j, epsilon) * M_2(E, m, a, k_j, epsilon) 
 
     return B
 
@@ -104,11 +105,12 @@ def d_S_matrix(E, m, a, epsilon, N):
     B_inverse = B_inv(E, m, a, N, epsilon)
     d_matrix = np.zeros((N, N), dtype=complex)
     momenta_array = momenta(E, m, N)
-    for p in momenta_array:
-        for k in momenta_array:
-            n_p = math.floor(p / delta_k(E, m, N)) - 1
-            n_k = math.floor(k / delta_k(E, m, N)) - 1
-            d_matrix[n_p][n_k] =  B_inverse[n_p][n_k] * G_S(E, m, p, k, epsilon)
+    
+    for i in range(len(momenta_array)):
+        for j in range(len(momenta_array)):
+            k_i = momenta_array[i]
+            k_j = momenta_array[j]
+            d_matrix[i][j] = - B_inverse[i][j] * G_S(E, m, k_i, k_j, epsilon)
 
     return d_matrix
 

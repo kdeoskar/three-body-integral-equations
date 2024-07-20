@@ -6,7 +6,9 @@
 #for quadratic model, α, β = params[0], params[1]
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.optimize as fitter
+# import scipy.optimize as fitter
+from scipy.optimize import curve_fit
+from functions import *
 
 #The list of N-data
 N_list = [1000 + 500 * i for i in range(11)]   #the elements of N_list can be changed later
