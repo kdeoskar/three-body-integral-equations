@@ -62,14 +62,13 @@ def main():
     momenta_array = momenta(E, m, N)
     for p in momenta_array:
         for k in momenta_array:
-
+            pass
     #         print(G_S(E, m, p, k, epsilon))
     # print(B(E, m, a, N, epsilon))
     # print(B_inv(E, m, a, N, epsilon))
 
     # print(rho_phib(E, m, a) * M_phib(E, m, a, N, epsilon))
 
-    print()
     print("Process finished --- %s seconds ---" % (time.time() - start_time))
 
 if __name__ == '__main__':
