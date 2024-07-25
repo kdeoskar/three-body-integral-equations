@@ -65,7 +65,13 @@ delta_rho_quad = []
 for i in range(11):
     delta_rho_linear.append(np.abs(M_phib_inv_linear_im[i] - rho_phib(E, m, a) / rho_phib(E, m, a)) * 100)
     delta_rho_quad.append(np.abs(M_phib_inv_quad_im[i] - rho_phib(E, m, a) / rho_phib(E, m, a)) * 100)
-    
+
+
+
+
+
+
+
 #Plotting
 #The arrays needed for plotting
 Re_rhoM_data = []
@@ -77,6 +83,7 @@ Im_rhoM_linear = []
 Im_rhoM_quad = []
 
 delta_rho = []
+#delta_rho_fitting are calculted above as delta_rho_linear and delta_rho_quad
 
 for i in range(11):
     Re_rhoM_data.append((rho_phib(E, m, a) * M_phib_bound_state_value(E, m, a, N[i], epsilon)).real)
