@@ -45,6 +45,7 @@ par_quad_im, cov_quad_im = curve_fit(quadratic, N_list, Im_M_data)
 b0_im = par_quad_im[0]
 b1_im, b2_im = par_quad_im[1], par_quad_im[2]   #The imaginary part of fitting para α, β
 
+#Print out the fitting paras
 print("The fitting parameter α of linear model is: {0:6.3f}+{0:6.3f}i".format(a1_re, a1_im))
 print("The fitting parameters α, β of quadratic model are: α={0:6.3f}+{0:6.3f}i, β={0:6.3f}+{0:6.3f}i".format(b1_re, b1_im, b2_re, b2_im))
 
