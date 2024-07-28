@@ -108,8 +108,8 @@ def B(E, m, a, N, epsilon):
     return B
 
 # Find inverse
-def B_inv(E, m, N, epsilon):
-    B_inv = np.linalg.inv(B(E, m, N, epsilon))
+def B_inv(E, m, a, N, epsilon):
+    B_inv = np.linalg.inv(B(E, m, a, N, epsilon))
     return B_inv
 
 '''
