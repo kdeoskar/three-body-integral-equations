@@ -32,7 +32,8 @@ def delta_k(E:float, m:float, N:int) -> float:
 # Generates list of momenta for energy E and N number of discrete points
 # Exclude k_min because it is zero
 def momenta(E:float, m:float, N:int):
-    momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
+    #momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
+    momenta_array = [delta_k(E, m, N) + delta_k(E, m, N) * i for i in range(N)]
     return momenta_array
 
 
