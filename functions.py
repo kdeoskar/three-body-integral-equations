@@ -17,20 +17,22 @@ Helper functions related to Momentum:
 '''
 
 # Function to calculate k_max corresponding to energy E 
-#TODO: the commented out code is actually k_max SQUARED
+# Page 11
 def k_max(E:float, m:float) -> float:
     #return ((E**2-m**2)/ (2*E))**2
-    return (E**2-m**2)/ (2*E)
-
+    return np.sqrt(((E**2-m**2)/ (2*E))**2)
+# Page 11
 def k_min():
     return 0
 
 # Function to calculate 
+# Page 11
 def delta_k(E:float, m:float, N:int) -> float:
     return (k_max(E, m) - k_min()) / N
 
 # Generates list of momenta for energy E and N number of discrete points
 # Exclude k_min because it is zero
+#TODO: figure out starting point
 def momenta(E:float, m:float, N:int):
     momenta_array = np.linspace(delta_k(E, m, N), k_max(E, m), N, endpoint = True) 
     return momenta_array
