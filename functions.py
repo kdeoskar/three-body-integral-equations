@@ -65,7 +65,7 @@ def J(x):
 
 def H(E, m, p, k):
     #return J(E_2(E, m, p)**2 / (4 * m**2)) * J(E_2(E, m, k)**2 / (4 * m**2))
-    return J(s2k(E, m, p) / (4 * m**2)) * J(s2k(E, m k) / (4 * m**2))
+    return J(s2k(E, m, p) / (4 * m**2)) * J(s2k(E, m ,k) / (4 * m**2))
  
 # Removing factors of p and k in denominator for now
 def G_S(E, m, p, k, epsilon) -> complex:
