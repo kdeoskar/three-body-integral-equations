@@ -43,9 +43,11 @@ def momenta(E:float, m:float, N:int):
 Helper functions related to Energy:
 '''
 #Time component of 4-vector k
+# Page 3
 def omega(m:float, k:float) -> float:
     return np.sqrt(m**2 + k**2)
 
+# Page 5
 def alpha(E, m, p, k):
     return (E - omega(m, p) - omega(m, k))**2 - p**2 - k**2 - m**2
 
@@ -54,10 +56,12 @@ def alpha(E, m, p, k):
     #return (E - omega(m, k))**2 -k**2
 
 # Mandelstam Variable corresponding to 3-momentum k and mass m
+# Page 3
 def s2k(E, m, k):
     return (E - omega(m, k))**2 -k**2
 
 # Defining cut-off function(s)
+#Page 3, Eq 6
 def J(x):
     if (x <= 0 ):
         return 0
@@ -66,23 +70,32 @@ def J(x):
     else:
         return np.exp(-1/x * np.exp(-1/(1-x)))
 
+#Page 3, Eq 5
 def H(E, m, p, k):
     #return J(E_2(E, m, p)**2 / (4 * m**2)) * J(E_2(E, m, k)**2 / (4 * m**2))
     return J(s2k(E, m, p) / (4 * m**2)) * J(s2k(E, m ,k) / (4 * m**2))
  
+
 # Removing factors of p and k in denominator for now
+# Page 5, Eq 13
 def G_S(E, m, p, k, epsilon) -> complex:
-    return -H(E, m, p, k) / (4 * p * k ) * cmath.log( (alpha(E, m, p, k) - 2*p*k + 1j*epsilon) /  (alpha(E, m, p, k) + 2*p*k + 1j*epsilon)  ) #1j is the imaginary unit in python syntax
+    return (-H(E, m, p, k) / (4 * p * k )) * cmath.log( (alpha(E, m, p, k) - 2*p*k + 1j*epsilon) /  (alpha(E, m, p, k) + 2*p*k + 1j*epsilon)  ) #1j is the imaginary unit in python syntax
 
 # Bound-state internal scattering amplitude
+# Page 5, Eq 15, and Page 6, Eq 20
+#Note: found 2 errors in this function, which have now been fixed
 def M_2(E, m, a, k, epsilon) -> complex:
-    return -16*np.pi*cmath.sqrt(s2k(E, m, k) + 1j*epsilon) / (1 / a + 1j*cmath.sqrt(((s2k(E, m, k) + 1j*epsilon)/2)**2 - m**2))
+    return (16*np.pi*cmath.sqrt(s2k(E, m, k) + 1j*epsilon)) / (-(1 / a) - 1j*cmath.sqrt(((s2k(E, m, k) + 1j*epsilon)/4) - m**2))
 
 #Calculates the epsilon value according to different eta
-def epsilon(E, m, N, eta):
-    return (eta * k_max(E, m)) / (2 * np.pi * N)
+#Page 12 (epsilon_q), Page 14, Eq 49 (normal epsilon)
+def epsilon(E, m, a, N, eta): #note: added an a parameter
+    #return (eta * k_max(E, m)) / (2 * np.pi * N)
+    return ((4* q(E, m, a) * E**2)/(E**2 + m**2 - s_b(m, a)))*((eta*k_max(E, m))/(2*np.pi*N))
     
 # Calculates the B matrix and returns its inverse
+# Page 12, Eq 35
+# TODO: figure out mesh shit
 def B(E, m, a, N, epsilon):
     B = np.zeros((N, N), dtype=complex)
     momenta_array = momenta(E, m, N)
@@ -90,7 +103,7 @@ def B(E, m, a, N, epsilon):
         for j in range(N):
             k_i = momenta_array[i]
             k_j = momenta_array[j]
-            B[i][j] = np.kron(i, j) + (delta_k(E, m, N) * k_j**2) / ((2 * np.pi)**2 * omega(m, k_j)) * G_S(E, m, k_i, k_j, epsilon) * M_2(E, m, a, k_j, epsilon) 
+            B[i][j] = np.kron(i, j) + ((delta_k(E, m, N) * k_j**2) / ((2 * np.pi)**2 * omega(m, k_j))) * G_S(E, m, k_i, k_j, epsilon) * M_2(E, m, a, k_j, epsilon) 
 
     return B
 
@@ -102,16 +115,21 @@ def B_inv(E, m, N, epsilon):
 '''
 Function to solve for d_S() (eq 34)
 '''
+#Page 12, Eq 34
 def d_S(E, m, p, k, epsilon, N):
     '''Solves for d_S using Brute Force Method'''
     B_inverse = B_inv(E, m, N, epsilon)
 
     # Find the Indices of p and k in the momentum array
+    # TODO: ask keshav about how this works
     n_p = p / delta_k(E, m, N) 
     n_k = k / delta_k(E, m, N)
 
     return B_inverse[n_p][n_k] * G_S(E, m, p, k, epsilon)
 
+
+# Page 12, Eq 34 (kinda???)
+#TODO: Where does this help?
 def d_S_matrix(E, m, a, epsilon, N):
     B_inverse = B_inv(E, m, a, N, epsilon)
     d_matrix = np.zeros((N, N), dtype=complex)
@@ -132,12 +150,14 @@ def d_S_matrix(E, m, a, epsilon, N):
 '''
 The pole position in terms of the binding momentum, s_b, (eq 17)
 '''
+# Page 6, Eq 17
 def s_b(m, a):
     return 4*( m**2 - (1 / a)**2 )
 
 '''
 Residue g (eq 18)
 '''
+# Page 6, Eq 18
 def residue_g(m, a): 
     return 8 * np.sqrt(2*np.pi * np.sqrt(s_b(m, a)) * (1/a))
 
@@ -148,18 +168,21 @@ def residue_g(m, a):
 '''
 Kallen Triangle Function 
 '''
+#Page 6
 def triangle_function(x, y, z):
     return x**2 + y**2 + z**2 - 2*( x*y + y*z + x*z )
 
 '''
 "on shell" value of k as q (momentum corresponding bound state pole) (eq 19)
 '''
+# Page 6, Eq 19
 def q(E, m, a) -> complex:
     return (1 / 2*E) * cmath.sqrt(triangle_function(E**2, s_b(m, a), m**2))
 
 '''
 Two body phase space between bound state and spectator (eq 26)
 '''
+#Page 7, Eq 26
 def rho_phib(E, m, a) -> complex:
     return ( q(E, m, a) / (8*np.pi* E ))
 
@@ -168,9 +191,8 @@ def rho_phib(E, m, a) -> complex:
 # Now, we just need to take appropriate limits
 ################################################
 
-'''
-Numerical evaluation of the limit to the bound state pole (eq 24)
-'''
+#TODO: SOMETHING IS WRONG HERE
+#TODO: Where is this coming from??????????
 def M_phib(E, m, a, N, epsilon) -> complex:
     q_momentum = q(E, m, a).real
     return residue_g(m, a)**2 * d_S(E, m, a, q_momentum, q_momentum, epsilon, N)
@@ -211,6 +233,7 @@ def Im_rho_M(E, m, a, N, epsilon):
 def Im_rho_M_matrix(E, m, a, N, epsilon):
     return (rho_phib(E, m, a).real *  M_phib_inv_bound_state_value(E, m, a, N, epsilon)).imag
 
+#Page 9, Eq 30
 def delta_rho(E, m, a, N, epsilon):
     return np.abs( (Im_rho_M_matrix(E, m, a, N, epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a) ) * 100
 
