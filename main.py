@@ -19,18 +19,18 @@ def main():
 
     start_time = time.time()
 
-    # print()
-    # print(M_phib_matrix(E, m, a, N, epsilon))
-    # print()
+    print()
+    print(M_phib_matrix(E, m, a, N, epsilon))
+    print()
 
-    # print(Re_rho_M_matrix(E, m, a, N, epsilon))
-    # print(Im_rho_M_matrix(E, m, a, N, epsilon))
-    # print(delta_rho(E, m, a, N, epsilon))
+    print(Re_rho_M_matrix(E, m, a, N, epsilon))
+    print(Im_rho_M_matrix(E, m, a, N, epsilon))
+    print(delta_rho(E, m, a, N, epsilon))
 
-    # quantities = return_values(E, m, a, N, epsilon)
-    # print("Re(rho * M) = ", quantities[0])
-    # print("Im(rho * M) = ", quantities[1])
-    # print("Delta rho = ", quantities[2])
+    quantities = return_values(E, m, a, N, epsilon)
+    print("Re(rho * M) = ", quantities[0])
+    print("Im(rho * M) = ", quantities[1])
+    print("Delta rho = ", quantities[2])
 
     '''Random test to see if np.linalg.inv works with complex matrices'''
     # complex_matrix = np.array([
@@ -58,16 +58,17 @@ def main():
     # print(M_matrix_inv)
 
     # print(d_S_matrix(E, m, a, epsilon, N))
-
+    '''
     momenta_array = momenta(E, m, N)
     for p in momenta_array:
         for k in momenta_array:
             pass
     #         print(G_S(E, m, p, k, epsilon))
-    # print(B(E, m, a, N, epsilon))
-    # print(B_inv(E, m, a, N, epsilon))
+    '''
+    print(B(E, m, a, N, epsilon))
+    print(B_inv(E, m, a, N, epsilon))
 
-    # print(rho_phib(E, m, a) * M_phib(E, m, a, N, epsilon))
+    print(rho_phib(E, m, a) * M_phib(E, m, a, N, epsilon))
 
     print("Process finished --- %s seconds ---" % (time.time() - start_time))
 

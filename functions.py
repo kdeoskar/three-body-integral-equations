@@ -16,9 +16,11 @@ import math
 Helper functions related to Momentum:
 '''
 
-# Function to calculate k_max corresponding to energy E
+# Function to calculate k_max corresponding to energy E 
+#TODO: the commented out code is actually k_max SQUARED
 def k_max(E:float, m:float) -> float:
-    return ((E**2-m**2)/ (2*E))**2
+    #return ((E**2-m**2)/ (2*E))**2
+    return (E**2-m**2)/ (2*E)
 
 def k_min():
     return 0
