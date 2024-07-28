@@ -73,6 +73,10 @@ def G_S(E, m, p, k, epsilon) -> complex:
 def M_2(E, m, a, k, epsilon) -> complex:
     return -16*np.pi*cmath.sqrt(s2k(E, m, k) + 1j*epsilon) / (1 / a + 1j*cmath.sqrt(((s2k(E, m, k) + 1j*epsilon)/2)**2 - m**2))
 
+#Calculates the epsilon value according to different eta
+def epsilon(E, m, N, η):
+    return (η * k_max(E, m)) / (2 * np.pi * N)
+    
 # Calculates the B matrix and returns its inverse
 def B(E, m, a, N, epsilon):
     B = np.zeros((N, N), dtype=complex)
