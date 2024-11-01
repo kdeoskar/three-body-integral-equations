@@ -10,16 +10,19 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from functions import *
 
+#The number of points needed
+n = 10
+
 #The list of N-data
-N_list = [1000 + 500 * i for i in range(11)]   #the elements of N_list can be changed later
+N_list = [1000 + 500 * i for i in range(n+1)]   #the elements of N_list can be changed later
 
 #The lists of different y-data
 Re_M_data = []
 Im_M_data = []
 
-for i in range(11):
-    Re_M_data.append(M_phib_bound_state_value(E, m, a, N[i], epsilon).real)
-    Im_M_data.append(M_phib_bound_state_value(E, m, a, N[i], epsilon).imag)
+for i in range(n+1):
+    Re_M_data.append(M_phib_bound_state_value(E, m, a, N_list[i], epsilon).real)
+    Im_M_data.append(M_phib_bound_state_value(E, m, a, N_list[i], epsilon).imag)
     
 #Linear model
 def linear(x, a0, a1):
@@ -53,16 +56,16 @@ print("The fitting parameters α, β of quadratic model are: α={0:6.3f}+{0:6.3f
 M_phib_inv_linear_im = []
 M_phib_inv_quad_im = []
 
-for i in range(11):
-    M_phib_inv_linear_im.append((1 / ((a0_re + 1j*a0_im) - (a1_re + 1j*a1_im) / N[i])).imag)
-    M_phib_inv_quad_im.append((1 / ((b0_re + 1j*b0_im) - (b1_re + 1j*b1_im) / N[i] - (b2_re + 1j*b2_im) / (N[i]**2))).imag)
+for i in range(n+1):
+    M_phib_inv_linear_im.append((1 / ((a0_re + 1j*a0_im) - (a1_re + 1j*a1_im) / N_list[i])).imag)
+    M_phib_inv_quad_im.append((1 / ((b0_re + 1j*b0_im) - (b1_re + 1j*b1_im) / N_list[i] - (b2_re + 1j*b2_im) / (N_list[i]**2))).imag)
     
 
 #The calculation of Δρ
 delta_rho_linear = []
 delta_rho_quad = []
 
-for i in range(11):
+for i in range(n+1):
     delta_rho_linear.append(np.abs(M_phib_inv_linear_im[i] - rho_phib(E, m, a) / rho_phib(E, m, a)) * 100)
     delta_rho_quad.append(np.abs(M_phib_inv_quad_im[i] - rho_phib(E, m, a) / rho_phib(E, m, a)) * 100)
 
@@ -85,14 +88,14 @@ Im_rhoM_quad = []
 delta_rho = []
 #delta_rho_fitting are calculted above as delta_rho_linear and delta_rho_quad
 
-for i in range(11):
-    Re_rhoM_data.append((rho_phib(E, m, a) * M_phib_bound_state_value(E, m, a, N[i], epsilon)).real)
-    Re_rhoM_linear.append((rho_phib(E, m, a) * ((a0_re + 1j*a0_im) - (a1_re + 1j*a1_im) / N[i])).real)
-    Re_rhoM_quad.append((rho_phib(E, m, a) * ((b0_re + 1j*b0_im) - (b1_re + 1j*b1_im) / N[i] - (b2_re + 1j*b2_im) / (N[i]**2))).real)
-    Im_rhoM_data.append((rho_phib(E, m, a) * M_phib_bound_state_value(E, m, a, N[i], epsilon)).imag)
-    Im_rhoM_linear.append((rho_phib(E, m, a) * ((a0_re + 1j*a0_im) - (a1_re + 1j*a1_im) / N[i])).imag)
-    Im_rhoM_quad.append((rho_phib(E, m, a) * ((b0_re + 1j*b0_im) - (b1_re + 1j*b1_im) / N[i] - (b2_re + 1j*b2_im) / (N[i]**2))).imag)
-    delta_rho.append(np.abs((Im_rho_M_matrix(E, m, a, N[i], epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a)) * 100)
+for i in range(n+1):
+    Re_rhoM_data.append((rho_phib(E, m, a) * M_phib_bound_state_value(E, m, a, N_list[i], epsilon)).real)
+    Re_rhoM_linear.append((rho_phib(E, m, a) * ((a0_re + 1j*a0_im) - (a1_re + 1j*a1_im) / N_list[i])).real)
+    Re_rhoM_quad.append((rho_phib(E, m, a) * ((b0_re + 1j*b0_im) - (b1_re + 1j*b1_im) / N_list[i] - (b2_re + 1j*b2_im) / (N_list[i]**2))).real)
+    Im_rhoM_data.append((rho_phib(E, m, a) * M_phib_bound_state_value(E, m, a, N_list[i], epsilon)).imag)
+    Im_rhoM_linear.append((rho_phib(E, m, a) * ((a0_re + 1j*a0_im) - (a1_re + 1j*a1_im) / N_list[i])).imag)
+    Im_rhoM_quad.append((rho_phib(E, m, a) * ((b0_re + 1j*b0_im) - (b1_re + 1j*b1_im) / N_list[i] - (b2_re + 1j*b2_im) / (N_list[i]**2))).imag)
+    delta_rho.append(np.abs((Im_rho_M_matrix(E, m, a, N_list[i], epsilon) - rho_phib(E, m, a)) / rho_phib(E, m, a)) * 100)
 
 #Figures for linear fitting model
 fig1, (ax1, ax2, ax3) = plt.subplots(3,1)
@@ -108,7 +111,7 @@ ax2.plot(N_list, Im_rhoM_linear)
 ax2.set_ylabel(r'Im($\rho_{{\phi}{b}} M_{{\phi}{b}}$)')
 
 ax3.scatter(N_list, delta_rho)
-ax3,scatter(N_list, delta_rho_linear, marker = '_')
+ax3.scatter(N_list, delta_rho_linear, marker = '_')
 ax3.set_ylabel(r'Δ$\rho_{{\phi}{b}}$')
 
 #Figures for quadratic fitting model
@@ -125,7 +128,7 @@ ax2.plot(N_list, Im_rhoM_quad)
 ax2.set_ylabel(r'Im($\rho_{{\phi}{b}} M_{{\phi}{b}}$)')
 
 ax3.scatter(N_list, delta_rho)
-ax3,scatter(N_list, delta_rho_quad, marker = '_')
+ax3.scatter(N_list, delta_rho_quad, marker = '_')
 ax3.set_ylabel(r'Δ$\rho_{{\phi}{b}}$')
 
 plt.show()
